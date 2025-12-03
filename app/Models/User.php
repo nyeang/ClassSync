@@ -1,4 +1,5 @@
 <?php
+// app/Models/User.php
 
 namespace App\Models;
 
@@ -15,11 +16,14 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
-        'google_id',
-        'student_id',
-        'department',
+        'gender',
+        'date_of_birth',
         'phone',
+        'department',
+        'academic_year',
+        'address',
         'is_active',
+        'profile_picture',
     ];
 
     protected $hidden = [
@@ -33,38 +37,79 @@ class User extends Authenticatable
         'is_active' => 'boolean',
     ];
 
-    /**
-     * Check if user is a teacher
-     */
+    // ========== SCOPES ==========
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    public function scopeStudents($query)
+    {
+        return $query->where('role', 'Student');
+    }
+
+    public function scopeTeachers($query)
+    {
+        return $query->where('role', 'Teacher');
+    }
+
+    // ========== ROLE HELPERS ==========
     public function isTeacher()
     {
         return $this->role === 'Teacher';
     }
 
-    /**
-     * Check if user is a student
-     */
     public function isStudent()
     {
         return $this->role === 'Student';
     }
 
-    /**
-     * Get dashboard route based on role
-     */
-    public function getDashboardRoute()
+    public function isAdmin()
     {
-        return $this->isTeacher() 
-            ? route('teacher.dashboard') 
-            : route('student.dashboard');
+        return $this->role === 'Admin';
     }
 
-    /**
-     * Get profile picture URL
-     */
+    // ========== DASHBOARD ROUTE ==========
+    public function getDashboardRoute()
+    {
+        return match ($this->role) {
+            'Admin' => route('admin.dashboard'),
+            'Teacher' => route('teacher.dashboard'),
+            'Student' => route('student.dashboard'),
+            default => route('auth.login'),
+        };
+    }
+
+    // ========== ACCESSORS ==========
     public function getProfilePictureAttribute()
     {
-        // Return default avatar or user's profile picture
-        return $this->attributes['profile_picture'] ?? 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=4F46E5&color=fff';
+        return $this->attributes['profile_picture']
+            ?? 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=4F46E5&color=fff';
+    }
+
+    public function getInitialsAttribute(): string
+    {
+        $words = explode(' ', $this->name);
+        $initials = '';
+        foreach (array_slice($words, 0, 2) as $word) {
+            $initials .= strtoupper(substr($word, 0, 1));
+        }
+        return $initials;
+    }
+
+    // ========== RELATIONSHIPS ==========
+    public function classEnrollments()
+    {
+        return $this->hasMany(ClassEnrollment::class);
+    }
+
+    public function passwordResetRequests()
+    {
+        return $this->hasMany(PasswordResetRequest::class);
+    }
+
+    public function createdClasses()
+    {
+        return $this->hasMany(Classes::class, 'created_by_admin_id');
     }
 }

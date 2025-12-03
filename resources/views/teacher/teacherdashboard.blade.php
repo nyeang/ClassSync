@@ -1,86 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ClassSync - Teacher Dashboard</title>
-    <link rel="stylesheet" href="{{ asset('teacher_style/css/teacher-dashboard.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
-    <!-- Top Navigation Bar -->
-    <nav class="top-nav">
-        <div class="nav-left">
-            <button class="menu-btn" id="menuBtn">
-                <i class="fas fa-bars"></i>
-            </button>
-            <span class="logo">ClassSync</span>
-        </div>
-        <div class="nav-center">
-            <div class="search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Search classes...">
-            </div>
-        </div>
-        <div class="nav-right">
-            <button class="icon-btn">
-                <i class="fas fa-calendar"></i>
-            </button>
-            <button class="icon-btn notification-btn">
-                <i class="fas fa-bell"></i>
-                <span class="badge">3</span>
-            </button>
-            <div class="profile-menu">
-                <img src="https://ui-avatars.com/api/?name=Prof+Smith&background=4F46E5&color=fff" alt="Profile">
-                <span>Prof. Smith</span>
-                <i class="fas fa-chevron-down"></i>
-            </div>
-        </div>
-    </nav>
 
-    <!-- Sidebar Menu -->
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-content">
-            <a href="#" class="sidebar-item active">
-                <i class="fas fa-home"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="#" class="sidebar-item">
-                <i class="fas fa-book"></i>
-                <span>All Classes</span>
-            </a>
-            <a href="#" class="sidebar-item" onclick="showCreateClassModal()">
-                <i class="fas fa-plus"></i>
-                <span>Create Class</span>
-            </a>
-            <hr>
-            <a href="#" class="sidebar-item">
-                <i class="fas fa-clipboard-list"></i>
-                <span>My Assignments</span>
-            </a>
-            <a href="#" class="sidebar-item">
-                <i class="fas fa-chart-bar"></i>
-                <span>Analytics</span>
-            </a>
-            <a href="#" class="sidebar-item">
-                <i class="fas fa-folder"></i>
-                <span>Rubrics Library</span>
-            </a>
-            <a href="#" class="sidebar-item">
-                <i class="fas fa-cog"></i>
-                <span>Settings</span>
-            </a>
-            <hr>
-            <div class="sidebar-section">
-                <h4>MY CLASSES</h4>
-                <a href="#" class="sidebar-item small">Web Development 101</a>
-                <a href="#" class="sidebar-item small">Database Systems</a>
-                <a href="#" class="sidebar-item small">Mobile Development</a>
-                <a href="#" class="sidebar-item small">+ View All</a>
-            </div>
-        </div>
-    </aside>
 
+@extends('layouts.app')
+@section('content')
+    @include('layouts.navbar')
+    @include('layouts.sidebar')
     <!-- Main Content -->
     <main class="main-content">
         <div class="dashboard-container">
@@ -265,10 +188,7 @@
                     </div>
                 </div>
 
-                <!-- Create New Class Button -->
-                <button class="btn-create-class" onclick="showCreateClassModal()">
-                    <i class="fas fa-plus"></i> Create New Class
-                </button>
+
             </div>
 
             <!-- Right Sidebar (30%) -->
@@ -426,12 +346,6 @@
     <!-- Create Class Modal -->
     <div class="modal" id="createClassModal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h2>Create New Class</h2>
-                <button class="close-btn" onclick="closeModal('createClassModal')">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
             <div class="modal-body">
                 <form id="createClassForm">
                     <div class="form-group">
@@ -462,8 +376,5 @@
             </div>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-    <script src="{{ asset('teacher_style/js/teacher-dashboard.js') }}"></script>
-</body>
-</html>
+@endsection
+    

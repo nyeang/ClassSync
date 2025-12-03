@@ -13,8 +13,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         // Register BOTH middlewares
         $middleware->alias([
-            'teacher' => \App\Http\Middleware\EnsureUserIsTeacher::class,
-            'student' => \App\Http\Middleware\EnsureUserIsStudent::class,
+        'teacher' => \App\Http\Middleware\EnsureUserIsTeacher::class,
+        'student' => \App\Http\Middleware\EnsureUserIsStudent::class,
+        'role'    => \App\Http\Middleware\CheckRole::class, // ← added
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

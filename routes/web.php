@@ -1,65 +1,74 @@
 <?php
+// routes/web.php
 
-use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Auth\GoogleAuthController;
-use App\Http\Controllers\Teacher\DashboardController as TeacherDashboard;
-use App\Http\Controllers\Student\DashboardController as StudentDashboard;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\ClassController;
 use App\Http\Controllers\TeacherDashboardController;
+use App\Http\Controllers\StudentDashboardController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Unified Authentication Routes
-|--------------------------------------------------------------------------
-*/
+// ========== HOME REDIRECT ==========
+Route::get('/', function () {
+    return auth()->check()
+        ? redirect(auth()->user()->getDashboardRoute() ?? 'login')
+        : redirect('login');
+});
 
-// Guest routes (not logged in)
+// ========== GUEST ROUTES ==========
 Route::middleware('guest')->group(function () {
-    // Login
-    Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
-    
-    // Register
-    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-    Route::post('/register', [AuthController::class, 'register'])->name('register.post');
-    
-    // AJAX checks
-    Route::post('/check-email', [AuthController::class, 'checkEmail'])->name('check-email');
-    Route::post('/check-student-id', [AuthController::class, 'checkStudentId'])->name('check-student-id');
+    Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('login', [AuthController::class, 'login'])->name('login.post');
 });
 
-// // Google OAuth Routes (outside guest middleware - accessible to all)
-// Route::get('/auth/google', [GoogleAuthController::class, 'redirectToGoogle'])->name('auth.google');
-// Route::get('/auth/google/callback', [GoogleAuthController::class, 'handleGoogleCallback']);
-
-/*
-|--------------------------------------------------------------------------
-| Teacher Dashboard Routes
-|--------------------------------------------------------------------------
-*/
-
-Route::prefix('teacher')->name('teacher.')->middleware(['auth', 'teacher'])->group(function () {
-    // Dashboard - Using YOUR existing TeacherDashboardController
-    Route::get('/dashboard', [TeacherDashboardController::class, 'index'])->name('dashboard');
-    
-    // Logout
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    
-    // TODO: Add more teacher routes here
+// ========== AUTHENTICATED ROUTES ==========
+Route::middleware('auth')->group(function () {
+    // Logout (available to all authenticated users)
+    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 });
 
-/*
-|--------------------------------------------------------------------------
-| Student Dashboard Routes
-|--------------------------------------------------------------------------
-*/
+// ========== ADMIN ROUTES ==========
+Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->group(function () {
+    // Dashboard (main page)
+    Route::get('/', [UserController::class, 'index'])->name('dashboard');
+    Route::get('users', [UserController::class, 'index'])->name('users.index');
 
-Route::prefix('student')->name('student.')->middleware(['auth', 'student'])->group(function () {
-    // Dashboard
-    // Route::get('/dashboard', [StudentDashboard::class, 'index'])->name('dashboard');
-    
-    // Logout
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    
-    // TODO: Add more student routes here
+    // User management (form submissions)
+    Route::post('users', [UserController::class, 'store'])->name('users.store');
+    Route::put('users/{id}', [UserController::class, 'update'])->name('users.update');
+    Route::delete('users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+
+    // Class management (form submissions)
+    Route::get('classes', [ClassController::class, 'index'])->name('classes.index');
+    Route::post('classes', [ClassController::class, 'store'])->name('classes.store');
+
+    // ========== API ENDPOINTS (AJAX) ==========
+    Route::prefix('api')->name('api.')->group(function () {
+        // Dashboard Stats
+        Route::get('stats', [UserController::class, 'getStats'])->name('stats');
+
+        // Users API
+        Route::get('users', [UserController::class, 'getUsers'])->name('users');
+        Route::get('recent-users', [UserController::class, 'getRecentUsers'])->name('recent-users');
+        Route::post('users', [UserController::class, 'store'])->name('users.store');
+        Route::put('users/{id}', [UserController::class, 'update'])->name('users.update');
+        Route::post('users/{id}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle');
+        Route::post('users/{id}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
+        Route::delete('users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+
+        // Password Reset Requests API
+        Route::get('password-requests', [UserController::class, 'getPasswordRequests'])->name('password-requests');
+        Route::post('password-requests/{id}/process', [UserController::class, 'processPasswordRequest'])->name('password-requests.process');
+
+        // Classes API
+        Route::get('classes', [ClassController::class, 'getClasses'])->name('classes');
+        Route::post('classes', [ClassController::class, 'store'])->name('classes.store');
+        Route::put('classes/{id}', [ClassController::class, 'update'])->name('classes.update');
+        Route::post('classes/{id}/toggle-archive', [ClassController::class, 'toggleArchive'])->name('classes.toggle-archive');
+        Route::post('classes/{id}/reset-code', [ClassController::class, 'resetClassCode'])->name('classes.reset-code');
+        Route::delete('classes/{id}', [ClassController::class, 'destroy'])->name('classes.destroy');
+
+        //User
+        
+    });
 });
