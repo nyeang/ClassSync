@@ -49,6 +49,10 @@ class UserController extends Controller
         return view('admin.admin-dashboard', compact('users'));
     }
 
+    public function getAllUser(){
+        return view('admin.user-page');
+    }
+
     /**
      * Get dashboard statistics (AJAX)
      */

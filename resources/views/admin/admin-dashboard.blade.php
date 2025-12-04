@@ -3,20 +3,7 @@
 
 <section id="section-overview" class="section active">
     <div class="page-header">
-        <div class="page-header-left">
-            <h1>Dashboard Overview</h1>
-            <p>Welcome back! Here's what's happening with ClassSync today.</p>
-        </div>
-        <div class="page-header-actions">
-            <button class="btn btn-primary" id="btnOpenUserModal">
-                <i class="fas fa-user-plus"></i>
-                <span class="btn-text">New User</span>
-            </button>
-            <button class="btn btn-primary" id="btnOpenClassModal">
-                <i class="fas fa-plus"></i>
-                <span class="btn-text">New Class</span>
-            </button>
-        </div>
+        @include('layouts.admin_page_header')
     </div>
 
     <!-- Stats Grid -->
@@ -123,7 +110,8 @@
     </div>
 </section>
 
-<!-- ========== ENHANCED CREATE USER MODAL - CLEAN VERSION ========== -->
+<!-- ========== CREATE USER MODAL ========== -->
+<!-- ========== ENHANCED CREATE USER MODAL - EXPANDED ========== -->
 <div class="modal-backdrop" id="userModal">
     <div class="modal-dialog modal-user-create">
         
@@ -135,7 +123,7 @@
                 </div>
                 <div class="modal-title-group">
                     <h2>Create New User</h2>
-                    <p>Add a new student or teacher to the system</p>
+                    <p>Add a new student or teacher with complete details</p>
                 </div>
             </div>
             <button class="btn-close-circle" data-close-modal>
@@ -194,6 +182,30 @@
                     </div>
 
                     <div class="form-row">
+                        <!-- Student/Employee ID -->
+                        <div class="form-col">
+                            <label class="form-label-modern">
+                                <span class="label-icon-circle bg-yellow">
+                                    <i class="fas fa-id-badge"></i>
+                                </span>
+                                <span class="label-text-modern">
+                                    ID Number <span class="badge-req">Required</span>
+                                </span>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="userId" 
+                                name="user_id" 
+                                class="input-modern" 
+                                placeholder="e.g., ST2025001 or EMP001" 
+                                required
+                            >
+                            <small class="input-hint">
+                                <i class="fas fa-info-circle"></i>
+                                Student ID or Employee ID
+                            </small>
+                        </div>
+
                         <!-- Gender -->
                         <div class="form-col">
                             <label class="form-label-modern">
@@ -211,7 +223,9 @@
                                 <option value="Other">Other</option>
                             </select>
                         </div>
+                    </div>
 
+                    <div class="form-row">
                         <!-- Date of Birth -->
                         <div class="form-col">
                             <label class="form-label-modern">
@@ -228,44 +242,6 @@
                                 name="date_of_birth" 
                                 class="input-modern"
                             >
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Account Details Section -->
-                <div class="form-section">
-                    <div class="section-title">
-                        <i class="fas fa-user-circle"></i>
-                        <span>Account Details</span>
-                        <span class="section-badge">Required</span>
-                    </div>
-
-                    <div class="form-row">
-                        <!-- Email -->
-                        <div class="form-col">
-                            <label class="form-label-modern">
-                                <span class="label-icon-circle bg-blue">
-                                    <i class="fas fa-envelope"></i>
-                                </span>
-                                <span class="label-text-modern">
-                                    Email Username <span class="badge-req">Required</span>
-                                </span>
-                            </label>
-                            <div class="input-group-modern">
-                                <input 
-                                    type="text" 
-                                    id="userEmail" 
-                                    name="email" 
-                                    class="input-modern input-with-suffix" 
-                                    placeholder="john.doe" 
-                                    required
-                                >
-                                <span class="input-suffix-modern">@paragoniu.edu.kh</span>
-                            </div>
-                            <small class="input-hint">
-                                <i class="fas fa-info-circle"></i>
-                                Enter only the username part
-                            </small>
                         </div>
 
                         <!-- Phone Number -->
@@ -289,16 +265,54 @@
                     </div>
                 </div>
 
-                <!-- Academic Information Section -->
+                <!-- Account Details Section -->
                 <div class="form-section">
                     <div class="section-title">
-                        <i class="fas fa-graduation-cap"></i>
-                        <span>Academic Information</span>
+                        <i class="fas fa-user-circle"></i>
+                        <span>Account Details</span>
+                        <span class="section-badge">Required</span>
                     </div>
 
                     <div class="form-row">
-                        <!-- Department/Major -->
-                        <div class="form-col">
+                        <!-- Email -->
+                        <div class="form-col-full">
+                            <label class="form-label-modern">
+                                <span class="label-icon-circle bg-blue">
+                                    <i class="fas fa-envelope"></i>
+                                </span>
+                                <span class="label-text-modern">
+                                    Email Username <span class="badge-req">Required</span>
+                                </span>
+                            </label>
+                            <div class="input-group-modern">
+                                <input 
+                                    type="text" 
+                                    id="userEmail" 
+                                    name="email" 
+                                    class="input-modern input-with-suffix" 
+                                    placeholder="john.doe" 
+                                    required
+                                >
+                                <span class="input-suffix-modern">@paragoniu.edu.kh</span>
+                            </div>
+                            <small class="input-hint">
+                                <i class="fas fa-info-circle"></i>
+                                Enter only the username part before @
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Academic/Professional Information Section -->
+                <div class="form-section" id="roleSpecificSection">
+                    <div class="section-title">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Additional Information</span>
+                    </div>
+
+                    <div class="form-row">
+                        <!-- Department/Major (for Students) -->
+                        <div class="form-col" id="departmentField">
                             <label class="form-label-modern">
                                 <span class="label-icon-circle bg-violet">
                                     <i class="fas fa-building"></i>
@@ -318,8 +332,8 @@
                             </select>
                         </div>
 
-                        <!-- Academic Year / Position -->
-                        <div class="form-col">
+                        <!-- Academic Year (for Students) / Position (for Teachers) -->
+                        <div class="form-col" id="yearPositionField">
                             <label class="form-label-modern">
                                 <span class="label-icon-circle bg-orange">
                                     <i class="fas fa-layer-group"></i>
@@ -328,7 +342,7 @@
                                     Academic Year
                                 </span>
                             </label>
-                            <select id="userYear" name="academic_year" class="input-modern">
+                            <select id="userYear" name="academic_year" class="input-modern" id="yearSelect">
                                 <option value="">Select year</option>
                                 <option value="Year 1">Year 1</option>
                                 <option value="Year 2">Year 2</option>
@@ -339,7 +353,7 @@
                     </div>
                 </div>
 
-                <!-- Contact Information Section -->
+                <!-- Address Section -->
                 <div class="form-section">
                     <div class="section-title">
                         <i class="fas fa-map-marker-alt"></i>
@@ -360,7 +374,7 @@
                             id="userAddress" 
                             name="address" 
                             class="textarea-modern" 
-                            rows="3"
+                            rows="2"
                             placeholder="e.g., Street 123, Sangkat, Khan, Phnom Penh"
                         ></textarea>
                     </div>
@@ -373,7 +387,7 @@
                     </div>
                     <div class="alert-content-modern">
                         <strong>Automatic Password Generation</strong>
-                        <p>A secure temporary password will be generated and displayed after creation. The user must change it on their first login.</p>
+                        <p>A secure temporary password will be generated automatically. The user must change it on their first login.</p>
                     </div>
                 </div>
 
@@ -399,20 +413,20 @@
 
 <!-- ========== ENHANCED CREATE CLASS MODAL ========== -->
 <div class="modal-backdrop" id="classModal">
-    <div class="modal-dialog modal-class-create">
+    <div class="modal-dialog modal-class-create-v2">
         
-        <!-- Header with Gradient -->
+        <!-- Header with Purple Gradient -->
         <div class="modal-header-gradient">
             <div class="modal-header-content">
                 <div class="modal-icon-badge">
-                    <i class="fas fa-graduation-cap"></i>
+                    <i class="fas fa-chalkboard"></i>
                 </div>
                 <div class="modal-title-group">
                     <h2>Create New Class</h2>
                     <p>Set up a new class with complete details</p>
                 </div>
             </div>
-            <button class="btn-close-circle" data-close-modal>
+            <button class="btn-close-circle" data-close-modal type="button">
                 <i class="fas fa-times"></i>
             </button>
         </div>
@@ -420,208 +434,205 @@
         <form id="classForm">
             <div class="modal-body-enhanced">
                 
-                <!-- Required Section -->
-                <div class="form-section">
-                    <div class="section-title">
-                        <i class="fas fa-star"></i>
-                        <span>Required Information</span>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-col">
-                            <label class="form-label-modern">
-                                <span class="label-icon-circle bg-purple">
-                                    <i class="fas fa-book"></i>
-                                </span>
-                                <span class="label-text-modern">
-                                    Class Name <span class="badge-req">Required</span>
-                                </span>
-                            </label>
-                            <input 
-                                type="text" 
-                                id="className" 
-                                name="name" 
-                                class="input-modern" 
-                                placeholder="e.g., Web Development 101" 
-                                required
-                            >
-                        </div>
-
-                        <div class="form-col">
-                            <label class="form-label-modern">
-                                <span class="label-icon-circle bg-orange">
-                                    <i class="fas fa-tag"></i>
-                                </span>
-                                <span class="label-text-modern">
-                                    Subject <span class="badge-req">Required</span>
-                                </span>
-                            </label>
-                            <select id="classSubject" name="subject" class="input-modern" required>
-                                <option value="">Select subject</option>
-                                <option value="Computer Science">Computer Science</option>
-                                <option value="Mathematics">Mathematics</option>
-                                <option value="Science">Science</option>
-                                <option value="English">English</option>
-                                <option value="Business">Business</option>
-                                <option value="Engineering">Engineering</option>
-                                <option value="Arts & Design">Arts & Design</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
-
-                        <div class="form-col">
-                            <label class="form-label-modern">
-                                <span class="label-icon-circle bg-green">
-                                    <i class="fas fa-calendar-alt"></i>
-                                </span>
-                                <span class="label-text-modern">
-                                    Academic Year <span class="badge-req">Required</span>
-                                </span>
-                            </label>
-                            <select id="academicYear" name="academic_year" class="input-modern" required>
-                                <option value="">Select year</option>
-                                <option value="2025-2026" selected>2025-2026</option>
-                                <option value="2024-2025">2024-2025</option>
-                                <option value="2023-2024">2023-2024</option>
-                            </select>
-                        </div>
-                    </div>
+                <!-- BASIC INFORMATION SECTION -->
+                <div class="form-section-header">
+                    <i class="fas fa-info-circle section-header-icon"></i>
+                    <span class="section-header-title">Basic Information</span>
+                    <span class="section-badge-required">REQUIRED</span>
                 </div>
 
-                <!-- Optional Section -->
-                <div class="form-section">
-                    <div class="section-title">
-                        <i class="fas fa-info-circle"></i>
-                        <span>Additional Details</span>
-                        <span class="section-badge">Optional</span>
+                <div class="form-grid-2col">
+                    <!-- Class Name -->
+                    <div class="form-field-wrapper">
+                        <label class="form-label-icon">
+                            <span class="field-icon bg-purple">
+                                <i class="fas fa-graduation-cap"></i>
+                            </span>
+                            <span class="field-label-text">
+                                Class Name <span class="required-star">REQUIRED</span>
+                            </span>
+                        </label>
+                        <input 
+                            type="text" 
+                            name="name" 
+                            class="form-input-styled" 
+                            placeholder="e.g., Web Development 101" 
+                            required
+                        >
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-col">
-                            <label class="form-label-modern">
-                                <span class="label-icon-circle bg-pink">
-                                    <i class="fas fa-calendar-week"></i>
-                                </span>
-                                <span class="label-text-modern">Semester</span>
-                            </label>
-                            <select id="classSemester" name="semester" class="input-modern">
-                                <option value="">Select semester</option>
-                                <option value="1st Semester">1st Semester</option>
-                                <option value="2nd Semester">2nd Semester</option>
-                                <option value="Fall">Fall</option>
-                                <option value="Spring">Spring</option>
-                                <option value="Summer">Summer</option>
-                            </select>
-                        </div>
+                    <!-- Subject -->
+                    <div class="form-field-wrapper">
+                        <label class="form-label-icon">
+                            <span class="field-icon bg-blue">
+                                <i class="fas fa-book"></i>
+                            </span>
+                            <span class="field-label-text">
+                                Subject <span class="required-star">REQUIRED</span>
+                            </span>
+                        </label>
+                        <select name="subject" class="form-input-styled" required>
+                            <option value="">Select subject</option>
+                            <option value="Computer Science">Computer Science</option>
+                            <option value="Information Technology">Information Technology</option>
+                            <option value="Business Administration">Business Administration</option>
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="Engineering">Engineering</option>
+                            <option value="Arts & Design">Arts & Design</option>
+                            <option value="Languages">Languages</option>
+                            <option value="Sciences">Sciences</option>
+                        </select>
+                    </div>
 
-                        <div class="form-col">
-                            <label class="form-label-modern">
-                                <span class="label-icon-circle bg-red">
-                                    <i class="fas fa-clock"></i>
-                                </span>
-                                <span class="label-text-modern">Schedule</span>
-                            </label>
-                            <select id="classSchedule" name="schedule" class="input-modern">
-                                <option value="">Select schedule</option>
-                                <option value="Mon/Wed 8:00-9:30 AM">Mon/Wed 8:00-9:30 AM</option>
-                                <option value="Mon/Wed 10:00-11:30 AM">Mon/Wed 10:00-11:30 AM</option>
-                                <option value="Mon/Wed 1:00-2:30 PM">Mon/Wed 1:00-2:30 PM</option>
-                                <option value="Mon/Wed 3:00-4:30 PM">Mon/Wed 3:00-4:30 PM</option>
-                                <option value="Tue/Thu 8:00-9:30 AM">Tue/Thu 8:00-9:30 AM</option>
-                                <option value="Tue/Thu 10:00-11:30 AM">Tue/Thu 10:00-11:30 AM</option>
-                                <option value="Tue/Thu 1:00-2:30 PM">Tue/Thu 1:00-2:30 PM</option>
-                                <option value="Tue/Thu 3:00-4:30 PM">Tue/Thu 3:00-4:30 PM</option>
-                                <option value="Fri 8:00-11:00 AM">Fri 8:00-11:00 AM</option>
-                                <option value="Fri 1:00-4:00 PM">Fri 1:00-4:00 PM</option>
-                            </select>
-                        </div>
+                    <!-- Academic Year -->
+                    <div class="form-field-wrapper">
+                        <label class="form-label-icon">
+                            <span class="field-icon bg-orange">
+                                <i class="fas fa-calendar"></i>
+                            </span>
+                            <span class="field-label-text">
+                                Academic Year <span class="required-star">REQUIRED</span>
+                            </span>
+                        </label>
+                        <select name="academic_year" class="form-input-styled" required>
+                            <option value="">Select academic year</option>
+                            <option value="2024-2025">2024-2025</option>
+                            <option value="2025-2026" selected>2025-2026</option>
+                            <option value="2026-2027">2026-2027</option>
+                        </select>
+                    </div>
 
-                        <div class="form-col">
-                            <label class="form-label-modern">
-                                <span class="label-icon-circle bg-blue">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                </span>
-                                <span class="label-text-modern">Room/Location</span>
-                            </label>
-                            <input 
-                                type="text" 
-                                id="classRoom" 
-                                name="room" 
-                                class="input-modern" 
-                                placeholder="e.g., Room 301, Building A"
-                            >
-                        </div>
-
-                        <div class="form-col">
-                            <label class="form-label-modern">
-                                <span class="label-icon-circle bg-indigo">
-                                    <i class="fas fa-users"></i>
-                                </span>
-                                <span class="label-text-modern">Max Students</span>
-                            </label>
-                            <input 
-                                type="number" 
-                                id="maxStudents" 
-                                name="max_students" 
-                                class="input-modern" 
-                                placeholder="e.g., 30" 
-                                min="1" 
-                                max="500"
-                            >
-                        </div>
-
-                        <div class="form-col">
-                            <label class="form-label-modern">
-                                <span class="label-icon-circle bg-yellow">
-                                    <i class="fas fa-award"></i>
-                                </span>
-                                <span class="label-text-modern">Credits</span>
-                            </label>
-                            <input 
-                                type="number" 
-                                id="classCredits" 
-                                name="credits" 
-                                class="input-modern" 
-                                placeholder="e.g., 3" 
-                                min="0" 
-                                max="10" 
-                                step="0.5"
-                            >
-                        </div>
+                    <!-- Semester -->
+                    <div class="form-field-wrapper">
+                        <label class="form-label-icon">
+                            <span class="field-icon bg-pink">
+                                <i class="fas fa-calendar-alt"></i>
+                            </span>
+                            <span class="field-label-text">Semester</span>
+                        </label>
+                        <select name="semester" class="form-input-styled">
+                            <option value="">Select semester</option>
+                            <option value="1">Semester 1</option>
+                            <option value="2">Semester 2</option>
+                            <option value="Summer">Summer</option>
+                        </select>
                     </div>
                 </div>
 
                 <!-- Description -->
-                <div class="form-section">
-                    <div class="form-col-full">
-                        <label class="form-label-modern">
-                            <span class="label-icon-circle bg-violet">
-                                <i class="fas fa-align-left"></i>
+                <div class="form-field-wrapper-full">
+                    <label class="form-label-icon">
+                        <span class="field-icon bg-indigo">
+                            <i class="fas fa-align-left"></i>
+                        </span>
+                        <span class="field-label-text">Description</span>
+                    </label>
+                    <textarea 
+                        name="description" 
+                        class="form-textarea-styled" 
+                        rows="4"
+                        placeholder="Provide a brief description of the class..."
+                    ></textarea>
+                </div>
+
+                <!-- ADDITIONAL DETAILS SECTION -->
+                <div class="form-section-header">
+                    <i class="fas fa-cog section-header-icon"></i>
+                    <span class="section-header-title">Additional Details</span>
+                    <span class="section-badge-optional">OPTIONAL</span>
+                </div>
+
+                <div class="form-grid-2col">
+                    <!-- Schedule -->
+                    <div class="form-field-wrapper">
+                        <label class="form-label-icon">
+                            <span class="field-icon bg-red">
+                                <i class="fas fa-clock"></i>
                             </span>
-                            <span class="label-text-modern">Description</span>
+                            <span class="field-label-text">Schedule</span>
                         </label>
-                        <textarea 
-                            id="classDescription" 
-                            name="description" 
-                            class="textarea-modern" 
-                            rows="4"
-                            placeholder="Describe the class objectives, topics covered, prerequisites, and any other important information..."
-                        ></textarea>
-                        <small class="input-hint">
-                            <i class="fas fa-lightbulb"></i>
-                            A clear description helps students understand what to expect from this class
-                        </small>
+                        <input 
+                            type="text" 
+                            name="schedule" 
+                            class="form-input-styled" 
+                            placeholder="e.g., Mon/Wed 10:00-11:30 AM"
+                        >
+                    </div>
+
+                    <!-- Room/Location -->
+                    <div class="form-field-wrapper">
+                        <label class="form-label-icon">
+                            <span class="field-icon bg-green">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </span>
+                            <span class="field-label-text">Room/Location</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            name="room_location" 
+                            class="form-input-styled" 
+                            placeholder="e.g., Room 301"
+                        >
+                    </div>
+
+                    <!-- Max Students -->
+                    <div class="form-field-wrapper">
+                        <label class="form-label-icon">
+                            <span class="field-icon bg-violet">
+                                <i class="fas fa-users"></i>
+                            </span>
+                            <span class="field-label-text">Max Students</span>
+                        </label>
+                        <input 
+                            type="number" 
+                            name="max_students" 
+                            class="form-input-styled" 
+                            placeholder="e.g., 30"
+                            min="1"
+                        >
+                    </div>
+
+                    <!-- Credits -->
+                    <div class="form-field-wrapper">
+                        <label class="form-label-icon">
+                            <span class="field-icon bg-yellow">
+                                <i class="fas fa-award"></i>
+                            </span>
+                            <span class="field-label-text">Credits</span>
+                        </label>
+                        <input 
+                            type="number" 
+                            name="credits" 
+                            class="form-input-styled" 
+                            placeholder="e.g., 3"
+                            min="0"
+                            step="0.5"
+                        >
                     </div>
                 </div>
 
+                <!-- Teacher Assignment -->
+                <div class="form-field-wrapper-full">
+                    <label class="form-label-icon">
+                        <span class="field-icon bg-cyan">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                        </span>
+                        <span class="field-label-text">Assign Teacher</span>
+                    </label>
+                    <select name="teacher_id" class="form-input-styled" id="teacherSelect">
+                        <option value="">Select a teacher (optional)</option>
+                        <!-- Teachers loaded dynamically -->
+                    </select>
+                </div>
+
                 <!-- Info Alert -->
-                <div class="alert-info-modern">
-                    <div class="alert-icon-circle">
+                <div class="alert-info-box">
+                    <div class="alert-info-icon">
                         <i class="fas fa-info-circle"></i>
                     </div>
-                    <div class="alert-content-modern">
-                        <strong>What happens next?</strong>
-                        <p>After creating this class, you'll receive a unique class code that students can use to join. You can share this code or display it in class.</p>
+                    <div class="alert-info-content">
+                        <strong>Class Code & QR Code</strong>
+                        <p>A unique 8-character class code and QR code will be automatically generated for student enrollment.</p>
                     </div>
                 </div>
 
@@ -629,12 +640,12 @@
 
             <!-- Footer -->
             <div class="modal-footer-enhanced">
-                <button type="button" class="btn-cancel-enhanced" data-close-modal>
+                <button type="button" class="btn-cancel-styled" data-close-modal>
                     <i class="fas fa-times"></i>
                     <span>Cancel</span>
                 </button>
-                <button type="submit" class="btn-submit-enhanced">
-                    <i class="fas fa-check-circle"></i>
+                <button type="submit" class="btn-submit-styled" id="btnCreateClass">
+                    <i class="fas fa-check"></i>
                     <span>Create Class</span>
                 </button>
             </div>

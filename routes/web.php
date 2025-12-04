@@ -42,6 +42,8 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
     Route::get('classes', [ClassController::class, 'index'])->name('classes.index');
     Route::post('classes', [ClassController::class, 'store'])->name('classes.store');
 
+    Route::get('all-users', [UserController::class, 'getAllUser'])->name('all-users');
+
     // ========== API ENDPOINTS (AJAX) ==========
     Route::prefix('api')->name('api.')->group(function () {
         // Dashboard Stats
